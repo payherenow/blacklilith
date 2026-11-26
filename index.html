@@ -760,15 +760,82 @@ body::before {
   border-left: 4px solid #36e5d2 !important;
   box-shadow: 0 0 18px rgba(0, 220, 205, .1);
 }
-@keyframes mysticPulse {
-  0%, 100% { filter: drop-shadow(0 0 7px rgba(187, 105, 255, .65)); }
-  50% { filter: drop-shadow(0 0 15px rgba(0, 239, 218, .7)); }
+/* ===== MYSTIC RUNE EMBLEM ANIMATION ===== */
+
+.magic-emblem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 16px;
+  position: relative;
+
+  animation: emblemFloat 3.5s ease-in-out infinite;
 }
-.crown-logo {
-  animation: crownFloat 3s ease-in-out infinite, mysticPulse 4s ease-in-out infinite !important;
+
+.magic-emblem svg {
+  overflow: visible;
+  filter:
+    drop-shadow(0 0 8px rgba(174, 92, 255, .6))
+    drop-shadow(0 0 20px rgba(0, 239, 218, .3));
 }
+
+/* ОБЕРТАННЯ ЗОВНІШНЬОГО КІЛЬЦЯ */
+.rune-orbit {
+  transform-origin: 70px 70px;
+  animation: runeRotate 24s linear infinite;
+}
+
+/* ПУЛЬСАЦІЯ ЦЕНТРАЛЬНОЇ РУНИ */
+.rune-core {
+  transform-origin: 70px 70px;
+  animation: runePulse 3s ease-in-out infinite;
+}
+
+/* ПЛАВНЕ ПЛАВАННЯ */
+@keyframes emblemFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* ПОВІЛЬНЕ ОБЕРТАННЯ */
+@keyframes runeRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* СВІТІННЯ */
+@keyframes runePulse {
+  0%, 100% {
+    opacity: .8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* МОБІЛЬНІ ПРИСТРОЇ */
+@media (max-width: 480px) {
+  .magic-emblem svg {
+    width: 105px;
+    height: 105px;
+  }
+}
+
+/* ЗА ПОТРЕБИ ВІДКЛЮЧЕННЯ АНІМАЦІЇ */
 @media (prefers-reduced-motion: reduce) {
-  .crown-logo { animation: none !important; }
+  .magic-emblem,
+  .rune-orbit,
+  .rune-core {
+    animation: none !important;
+  }
 }
 
 </style>
@@ -781,13 +848,13 @@ body::before {
   <div class="header">
 
 <defs>
-  <linearGradient id="magicGradient" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0%" stop-color="#f5baff"/>
-    <stop offset="50%" stop-color="#a76bff"/>
-    <stop offset="100%" stop-color="#42f5df"/>
+  <linearGradient id="runeColor" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#f3baff"/>
+    <stop offset="50%" stop-color="#a45cff"/>
+    <stop offset="100%" stop-color="#48f5df"/>
   </linearGradient>
 
-  <filter id="magicGlow">
+  <filter id="runeGlow" x="-60%" y="-60%" width="220%" height="220%">
     <feGaussianBlur stdDeviation="3" result="blur"/>
     <feMerge>
       <feMergeNode in="blur"/>
@@ -796,48 +863,91 @@ body::before {
   </filter>
 </defs>
 
-<!-- Зовнішнє коло -->
-<circle cx="60" cy="60" r="43"
-  fill="none" stroke="url(#magicGradient)"
-  stroke-width="1.8" opacity=".9"/>
+<!-- ЗОВНІШНЄ ОБЕРТОВЕ КІЛЬЦЕ -->
+<g class="rune-orbit" fill="none"
+   stroke="url(#runeColor)" filter="url(#runeGlow)">
 
-<circle cx="60" cy="60" r="35"
-  fill="none" stroke="#b77aff"
-  stroke-width="1" stroke-dasharray="3 5"
-  opacity=".8"/>
+  <circle cx="70" cy="70" r="55"
+          stroke-width="1.5"/>
 
-<!-- Місяць -->
-<path d="M69 29
-  C45 29 34 51 42 71
-  C49 91 76 95 91 78
-  C72 85 53 70 54 51
-  C54 40 60 33 69 29Z"
-  fill="url(#magicGradient)"
-  filter="url(#magicGlow)"/>
+  <circle cx="70" cy="70" r="48"
+          stroke-width="1"
+          stroke-dasharray="2 5"
+          opacity=".8"/>
 
-<!-- Зірки -->
-<g fill="#9ffff3" filter="url(#magicGlow)">
-  <path d="M28 23 L31 32 L40 35 L31 38 L28 47 L25 38 L16 35 L25 32Z"/>
-  <path d="M91 17 L94 25 L102 28 L94 31 L91 39 L88 31 L80 28 L88 25Z"/>
-  <path d="M96 79 L99 86 L106 89 L99 92 L96 99 L93 92 L86 89 L93 86Z"/>
-  <circle cx="25" cy="77" r="2"/>
-  <circle cx="77" cy="103" r="2"/>
+  <!-- Декоративні промені -->
+  <path d="
+    M70 7 V18
+    M70 122 V133
+    M7 70 H18
+    M122 70 H133
+    M25 25 L33 33
+    M107 107 L115 115
+    M115 25 L107 33
+    M33 107 L25 115"
+    stroke-width="2"/>
 </g>
 
-<!-- Містичні руни -->
-<g fill="#e8c7ff" font-size="11"
-   text-anchor="middle" font-family="serif">
-  <text x="60" y="12">ᚠ</text>
-  <text x="109" y="63">ᚱ</text>
-  <text x="60" y="116">ᚷ</text>
-  <text x="11" y="63">ᚨ</text>
+<!-- РУНИ ПО КОЛУ -->
+<g stroke="url(#runeColor)"
+   stroke-width="2.3"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   fill="none"
+   filter="url(#runeGlow)">
+
+  <path d="M70 20 V29 M70 20 L78 26"/>
+  <path d="M102 38 L94 46 M94 38 L102 46"/>
+  <path d="M112 70 H102 M112 70 L105 64"/>
+  <path d="M102 102 L94 94 M94 102 L102 94"/>
+  <path d="M70 120 V110 M70 120 L78 114"/>
+  <path d="M38 102 L46 94 M46 102 L38 94"/>
+  <path d="M28 70 H38 M28 70 L35 64"/>
+  <path d="M38 38 L46 46 M46 38 L38 46"/>
 </g>
 
-<!-- Центральне світіння -->
-<circle cx="60" cy="60" r="3"
-  fill="#ffffff" filter="url(#magicGlow)"/>
-    
-</div>
+<!-- ВНУТРІШНЄ КОЛО -->
+<circle cx="70" cy="70" r="36"
+  fill="#15102b"
+  fill-opacity=".8"
+  stroke="url(#runeColor)"
+  stroke-width="1.5"
+  filter="url(#runeGlow)"/>
+
+<!-- ЦЕНТРАЛЬНА МАГІЧНА БІНДРУНА -->
+<g class="rune-core"
+   fill="none"
+   stroke="url(#runeColor)"
+   stroke-width="3"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   filter="url(#runeGlow)">
+
+  <path d="M70 35 V105"/>
+
+  <path d="M70 43 L48 65 L70 65 L91 43"/>
+
+  <path d="M70 65 L48 88 L70 88 L91 65"/>
+
+  <path d="M70 35 L91 56"/>
+
+  <path d="M70 105 L48 84"/>
+
+</g>
+
+<!-- ЧОТИРИ ЗІРКИ -->
+<g fill="#ffffff" filter="url(#runeGlow)">
+  <path d="M18 19 L21 27 L29 30 L21 33 L18 41 L15 33 L7 30 L15 27Z"/>
+  <path d="M120 15 L122 21 L128 23 L122 25 L120 31 L118 25 L112 23 L118 21Z"/>
+  <path d="M121 103 L124 111 L132 114 L124 117 L121 125 L118 117 L110 114 L118 111Z"/>
+  <path d="M20 103 L22 109 L28 111 L22 113 L20 119 L18 113 L12 111 L18 109Z"/>
+</g>
+
+<!-- ЦЕНТРАЛЬНА ІСКРА -->
+<circle cx="70" cy="70" r="3"
+  fill="#ffffff"
+  filter="url(#runeGlow)"/>
+  
     <h1>BLACKLILITH</h1>
     <p>КОСМЕТИКА • ДОГЛЯД • КРАСА</p>
   </div>
